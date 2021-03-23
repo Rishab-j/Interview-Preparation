@@ -1,79 +1,65 @@
 import java.util.*;
 
 class testing {
-    static int array[];
-    static int primes[];
+    
+    public static int maximumSwap(int num) {
+        String s = Integer.toString(num);
+        int[] arr = new int[s.length()];
 
-    public static void calculate(int n, int m) {
-        int j = 0;
-        int sqt = (int) Math.sqrt(m);
-        array = new int[sqt + 1];
-        primes = new int[sqt + 1];
-
-        // System.out.println(“sqt:” + sqt);
-
-        initialise(sqt + 1);
-
-        for (int i = 2; i*i <= sqt; i++) {
-            if (array[i] == 1) {
-                for (int k = i + i; k <= sqt; k += i) {
-                    array[k] = 0;
-                }
-            }
+        for(int i = 0; i < s.length(); i++){
+            arr[i] = s.charAt(i) - '0';
         }
 
-        for (int i = 2; i <= sqt; i++) {
-            if (array[i] == 1) {
-                primes[j] = i;
-                j++;
-            }
+        for(int i = 0; i < s.length(); i++){
+            System.out.print(arr[i] + " ");
+        }
+        System.out.println();
+
+        int n = arr.length;
+        int[] position = new int[10];
+        Arrays.fill(position,-1);
+        boolean flag = false;
+        
+        for(int i = n - 1; i >= 0; i--){
+            position[arr[i]] = i;
         }
         
-        printPrimesArray(j);
-
-        int diff = (m - n + 1);
-        array = new int[diff];
-        initialise(diff);
-        for (int k = 0; k < j; k++) {
-            int div = n / primes[k];
-            div *= primes[k];
-            while (div <= m) {
-                if (div >= n && primes[k] != div)
-                    array[div - n] = 0;
-                div += primes[k];
+        for(int i = 0; i < 10; i++){
+            System.out.print(position[i] + " ");
+        }
+        System.out.println();
+        
+        for(int i = 0; i < n; i++){
+            int j = 9;
+            while(j > arr[i]){
+                System.out.println("yes");
+                System.out.println(i);
+                if(position[j] != -1 && position[j] > i){
+                    System.out.println(arr[position[j]] + " -> " + position[j]);
+                    int temp = arr[i];
+                    arr[i] = arr[position[j]];
+                    arr[position[j]] = temp;
+                    flag = true;
+                    break;
+                }
+              j--;  
             }
+            if(flag) break;
         }
-        // for (int i = 0; i < diff; i++) {
-        //     if (array[i] == 1 && (i + n) != 1)
-        //         System.out.println(i + n);
-        // }
+        
+        int ans = 0;
+        int mul = 1;
+        for(int i = n - 1; i >= 0; i--){
+            ans += arr[i]*mul;
+            mul *= 10;
+        }
+        return ans;
     }
 
-    
-    public static void printPrimesArray(int j) { 
-        for (int i = 0; i < j; i++) {
-            System.out.print(primes[i]+",");
-        } 
-        System.out.println(); 
-    }
-     
-    public static void initialise(int sqt) {
-        for (int i = 0; i < sqt; i++) {
-            array[i] = 1;
-        }
-    }
 
     public static void main(String arg[]) {
-        int t, n, m;
-        // Scanner in = new Scanner(System.in);
-        t = 1;
-        for (int i = 0; i < t; i++) {
-            n = 105;
-            m = 200;
-            calculate(n, m);
-            System.out.println();
-        }
         
+        System.out.println(maximumSwap(19));
     }
 }
-// 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199.
+// 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199. 

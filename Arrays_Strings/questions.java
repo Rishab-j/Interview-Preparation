@@ -816,4 +816,72 @@ class questions {
         }
     }
 
+
+    // Lintcode 508 Wiggle Sort
+    public static void wiggle(int [] arr){
+        int n = arr.length;
+
+        for(int i = 1; i < n; i++){
+            if( i % 2 == 0){
+                if(arr[i] > arr[i-1]){
+                    swap(arr,i,i-1);
+                }
+            }else{
+                if(arr[i] < arr[i-1]){
+                    swap(arr,i,i-1);
+                }
+            }
+        }
+
+        for(int i = 0; i < n; i++){
+            System.out.print(arr[i] + " ");
+        }
+    }
+
+
+    // GFG : Find the number of jumps to reach X in the number line from zero
+
+    public static int countJumps(int n){  // O(root(N)) (where N is the 2*X)
+        int sum = 0;  
+        for(int i = 1; i <= n; i++){
+            sum += i;
+            if(sum == n){
+                return i;
+            }else if(sum > n){
+                if((sum - n) % 2 == 0){
+                    return i;
+                }else{
+                    if((i+1) % 2 ==0){
+                        return i + 2;
+                    }else{
+                        return i + 1;
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    // Leetcode 670 Maximum Swap
+    public int maximumSwap(int num) {
+        char[] A = Integer.toString(num).toCharArray();
+        int[] last = new int[10];
+        for (int i = 0; i < A.length; i++) {
+            last[A[i] - '0'] = i;
+        }
+
+        for (int i = 0; i < A.length; i++) {
+            for (int d = 9; d > A[i] - '0'; d--) {
+                if (last[d] > i) {
+                    char tmp = A[i];
+                    A[i] = A[last[d]];
+                    A[last[d]] = tmp;
+                    return Integer.valueOf(new String(A));
+                }
+            }
+        }
+        return num;
+    }
+
 }

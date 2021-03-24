@@ -743,7 +743,7 @@ class questions {
         }
     }
 
-    // Segmented Sieve Of Eratosthenes 
+    // Segmented Sieve Of Eratosthenes
 
     // Also read : https://www.geeksforgeeks.org/segmented-sieve/
 
@@ -768,22 +768,13 @@ class questions {
             }
         }
 
-        /** ABOVE FOR LOOP CAN ALSO BE WRITTEN AS
+        /**
+         * ABOVE FOR LOOP CAN ALSO BE WRITTEN AS
          * 
-         * for (int i = 2; i*i <= sqt; i++) {   // SIMPLE SIEVE
-                if (array[i] == 1) {
-                    for (int k = i + i; k <= sqt; k += i) {
-                        array[k] = 0;
-                    }
-                }
-            }
-
-            for (int i = 2; i <= sqt; i++) {
-                if (array[i] == 1) {
-                    primes[j] = i;
-                    j++;
-                }
-            }
+         * for (int i = 2; i*i <= sqt; i++) { // SIMPLE SIEVE if (array[i] == 1) { for
+         * (int k = i + i; k <= sqt; k += i) { array[k] = 0; } } }
+         * 
+         * for (int i = 2; i <= sqt; i++) { if (array[i] == 1) { primes[j] = i; j++; } }
          */
 
         // printPrimesArray(j);
@@ -816,44 +807,42 @@ class questions {
         }
     }
 
-
     // Lintcode 508 Wiggle Sort
-    public static void wiggle(int [] arr){
+    public static void wiggle(int[] arr) {
         int n = arr.length;
 
-        for(int i = 1; i < n; i++){
-            if( i % 2 == 0){
-                if(arr[i] > arr[i-1]){
-                    swap(arr,i,i-1);
+        for (int i = 1; i < n; i++) {
+            if (i % 2 == 0) {
+                if (arr[i] > arr[i - 1]) {
+                    swap(arr, i, i - 1);
                 }
-            }else{
-                if(arr[i] < arr[i-1]){
-                    swap(arr,i,i-1);
+            } else {
+                if (arr[i] < arr[i - 1]) {
+                    swap(arr, i, i - 1);
                 }
             }
         }
 
-        for(int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             System.out.print(arr[i] + " ");
         }
     }
 
-
     // GFG : Find the number of jumps to reach X in the number line from zero
 
-    public static int countJumps(int n){  // O(root(N)) (where N is the 2*X)
-        int sum = 0;  
-        for(int i = 1; i <= n; i++){
+    public static int countJumps(int n) { // O(root(N)) (where N is the 2*X)
+        int sum = 0;
+        for (int i = 1; i <= n; i++) {
             sum += i;
-            if(sum == n){
+            if (sum == n) {
                 return i;
-            }else if(sum > n){
-                if((sum - n) % 2 == 0){
+            } else if (sum > n) {
+                if ((sum - n) % 2 == 0) {
                     return i;
-                }else{
-                    if((i+1) % 2 ==0){
+                } else {
+                    if ((i + 1) % 2 == 0) {
                         return i + 2;
-                    }else{
+                    } else {
                         return i + 1;
                     }
                 }
@@ -882,6 +871,109 @@ class questions {
             }
         }
         return num;
+    }
+
+    // Leetcode 1007 Minimum Domino Rotations For Equal Row
+    public int minDominoRotations(int[] A, int[] B) {
+
+        int Acount1 = 0;
+        int Acount2 = 0;
+        int Bcount1 = 0;
+        int Bcount2 = 0;
+
+        for (int i = 0; i < A.length; i++) {
+            if (Acount1 != Integer.MAX_VALUE && Acount2 != Integer.MAX_VALUE) {
+                if (A[i] == A[0]) {
+                    if (B[i] != A[0]) {
+                        Acount2++;
+                    }
+                } else if (B[i] == A[0]) {
+                    if (A[i] != A[0]) {
+                        Acount1++;
+                    }
+                } else {
+                    Acount1 = Integer.MAX_VALUE;
+                    Acount2 = Integer.MAX_VALUE;
+                }
+            }
+            if (Bcount1 != Integer.MAX_VALUE && Bcount2 != Integer.MAX_VALUE) {
+                if (B[i] == B[0]) {
+                    if (A[i] != B[0]) {
+                        Bcount2++;
+                    }
+                } else if (A[i] == B[0]) {
+                    if (B[i] != B[0]) {
+                        Bcount1++;
+                    }
+                } else {
+                    Bcount1 = Integer.MAX_VALUE;
+                    Bcount2 = Integer.MAX_VALUE;
+                }
+            }
+        }
+
+        if (Acount1 == Integer.MAX_VALUE && Bcount1 == Integer.MAX_VALUE) {
+            return -1;
+        } else {
+            return Math.min(Acount1, Math.min(Acount2, Math.min(Bcount1, Bcount2)));
+        }
+
+    }
+
+    // Leetcode 43 Multiply Strings
+
+    public String multiply(String num1, String num2) {
+        // 1. Taking care of Boundary Case
+        if (num1.equals("0") || num2.equals("0"))
+            return "0";
+
+        // 2.at max length of product will be n+m
+        int[] ans = new int[num1.length() + num2.length()];
+
+        for (int i = num1.length() - 1; i >= 0; i--) {
+            for (int j = num2.length() - 1; j >= 0; j--) {
+
+                int valueIdx = i + j + 1;
+                int remainderIdx = i + j;
+                int product = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+
+                // 3.Adding value of remainder if present earlier at valueidx
+                product += ans[valueIdx];
+
+                // 4.digit value
+                ans[valueIdx] = product % 10;
+
+                // 5.Remainder from me
+                ans[remainderIdx] += product / 10;
+
+            }
+        }
+
+        // boolean precedingZeros=true;
+        // StringBuilder result=new StringBuilder("");
+
+        // //6.As we have made a array of maximum length n*m=n+m So result will be less
+        // than or equal to this. in less than case inital values will be zeros . So
+        // have to Remove Preceding Zeroes.
+        // for(int i=0;i<ans.length;i++){
+        // int value=ans[i];
+        // if(value!=0) precedingZeros=false;
+        // if(!precedingZeros) result.append(value);
+        // }
+
+        // return result.toString();
+
+        int index = 0;
+        while (index < ans.length && ans[index] == 0) {
+            ++index;
+        }
+
+        String result = "";
+        for (; index < ans.length; index++) {
+            result += String.valueOf(ans[index]);
+        }
+        return result;
+
     }
 
 }

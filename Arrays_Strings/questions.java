@@ -976,4 +976,252 @@ class questions {
 
     }
 
+    // Leetcode 632 Smallest Range Covering Elements from K Lists
+
+    class helper {
+        int r;
+        int c;
+        int v;
+
+        helper(int r, int c, int v) {
+            this.r = r;
+            this.c = c;
+            this.v = v;
+        }
+    }
+
+    public int[] smallestRange(List<List<Integer>> nums) {
+
+        PriorityQueue<helper> pq = new PriorityQueue<helper>((a, b) -> {
+            return a.v - b.v;
+        });
+
+        // int min = Integer.MAX_VALUE;
+        int b = Integer.MIN_VALUE;
+        int len = Integer.MAX_VALUE;
+        int[] ans = new int[2];
+
+        for (int i = 0; i < nums.size(); i++) {
+            pq.add(new helper(i, 0, nums.get(i).get(0)));
+            b = Math.max(b, nums.get(i).get(0));
+        }
+
+        while (pq.size() == nums.size()) {
+            helper h = pq.remove();
+            int a = h.v;
+            if (b - a + 1 < len && b - a + 1 > 0) {
+                // min = a;
+                len = b - a + 1;
+                ans = new int[] { a, b };
+            }
+
+            int r = h.r;
+            int c = h.c + 1;
+            if (c < nums.get(r).size()) {
+                pq.add(new helper(r, c, nums.get(r).get(c)));
+                b = Math.max(b, nums.get(r).get(c));
+            }
+        }
+
+        return ans;
+    }
+
+    // Leetcode 345 Reverse vowels of a string
+
+    public String reverseVowels(String s) { // O(n^2(log(r)))
+        // Convert string to character array
+        char[] ch = s.toCharArray(); // pointer 1
+        int left = 0, right = ch.length - 1; // pointer 2
+        while (left < right) {
+            boolean leftIsVowel = isVowel(ch[left]);
+            boolean rightIsVowel = isVowel(ch[right]);
+            if (leftIsVowel && rightIsVowel) {
+                swap(ch, left, right);
+                left++;
+                right--;
+            }
+            if (!leftIsVowel)
+                left++;
+            if (!rightIsVowel)
+                right--;
+        }
+        return new String(ch);
+    }
+
+    // swap if left and right pointer values are vowels
+    public void swap(char[] ch, int i, int j) {
+        char temp = ch[i];
+        ch[i] = ch[j];
+        ch[j] = temp;
+    }
+
+    // check if the character is vowel
+    public boolean isVowel(char c) {
+        char ch = Character.toLowerCase(c);
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+    }
+
+    // GFG : Minimum Platforms Required for trains/buses
+    public int findPlatform(int arr[], int dep[], int n) // O(nlogn)
+    {
+        // Sort arrival and departure arrays
+        Arrays.sort(arr);
+        Arrays.sort(dep);
+
+        // plat_needed indicates number of platforms
+        // needed at a time
+        int plat_needed = 1, result = 1;
+        int i = 1, j = 0;
+
+        // Similar to merge in merge sort to process
+        // all events in sorted order
+        while (i < n && j < n) {
+            // If next event in sorted order is arrival,
+            // increment count of platforms needed
+            if (arr[i] <= dep[j]) {
+                plat_needed++;
+                i++;
+            }
+
+            // Else decrement count of platforms needed
+            else if (arr[i] > dep[j]) {
+                plat_needed--;
+                j++;
+            }
+
+            // Update result if needed
+            if (plat_needed > result)
+                result = plat_needed;
+        }
+
+        return result;
+    }
+
+    // Leetcode 41 First Missing Positive
+
+    public static int firstMissingPositive(int[] arr) {
+
+        if (arr.length == 0)
+            return 1;
+        int n = arr.length;
+        int i = 0;
+
+        while (i < n) {
+            int a = i + 1;
+            if (arr[i] != a && arr[i] < n && arr[i] > 0 && arr[arr[i] - 1] != arr[i]) {
+                swap(arr, i, arr[i] - 1);
+            } else {
+                i++;
+            }
+        }
+
+        for (int j = 0; j < n; j++) {
+            int b = j + 1;
+            if (arr[j] != b)
+                return b;
+        }
+
+        return n + 1;
+    }
+
+    // Leetcode 152 Max Product Subarray
+
+    public int maxProduct(int[] nums) { 
+        int mpp = nums[0]; // mpp: maximum Positive Product
+        int mnp = nums[0]; // mnp: Minimum Negative Product
+        int omax = nums[0]; // overall maximum Product
+
+        for (int i = 1; i < nums.length; i++) {
+
+            int val = nums[i];
+            if (val < 0) {
+                int temp1 = mnp;
+                int temp2 = mpp;
+                mpp = Math.max(val, temp1 * val);
+                mnp = Math.min(val, temp2 * val);
+            } else {
+                mpp = Math.max(val, val * mpp);
+                mnp = Math.min(val, val * mnp);
+            }
+            omax = Math.max(mpp, omax);
+
+        }
+
+        return omax;
+    }
+
+    public int maxProduct2(int[] nums) {  // using prefix and suffix product
+
+        int cp = 1;
+        int max = Integer.MIN_VALUE;
+
+        for (int i = 0; i < nums.length; i++) {
+            cp = nums[i] * cp;
+            max = Math.max(cp, max);
+            cp = cp == 0 ? 1 : cp;
+
+        }
+
+        cp = 1;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            cp = nums[i] * cp;
+            max = Math.max(cp, max);
+            if (cp == 0) {
+                cp = 1;
+            }
+
+        }
+        return max;
+    }
+
+    public int maxProduct3(int[] nums) { // using prefix and suffix product in one go
+        int cp = 1;
+        int cp2 = 1;
+        int max = Integer.MIN_VALUE;
+
+        for (int i = 0; i < nums.length; i++) {
+            // forward product
+            cp = nums[i] * cp;
+            max = Math.max(cp, max);
+            cp = cp == 0 ? 1 : cp;
+
+            // reverse product
+
+            cp2 = nums[nums.length - 1 - i] * cp2;
+            max = Math.max(cp2, max);
+            cp2 = cp2 == 0 ? 1 : cp2;
+        }
+
+        return max;
+    }
+
+    // Leetcode 48 Rotate Image
+
+    public void rotate(int[][] matrix) {
+        transpose(matrix);
+        reflect(matrix);
+    }
+    
+    public void transpose(int[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                int tmp = matrix[j][i];
+                matrix[j][i] = matrix[i][j];
+                matrix[i][j] = tmp;
+            }
+        }
+    }
+    
+    public void reflect(int[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n / 2; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[i][n - j - 1];
+                matrix[i][n - j - 1] = tmp;
+            }
+        }
+    }
+
 }

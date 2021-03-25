@@ -1126,7 +1126,7 @@ class questions {
 
     // Leetcode 152 Max Product Subarray
 
-    public int maxProduct(int[] nums) { 
+    public int maxProduct(int[] nums) {
         int mpp = nums[0]; // mpp: maximum Positive Product
         int mnp = nums[0]; // mnp: Minimum Negative Product
         int omax = nums[0]; // overall maximum Product
@@ -1150,7 +1150,7 @@ class questions {
         return omax;
     }
 
-    public int maxProduct2(int[] nums) {  // using prefix and suffix product
+    public int maxProduct2(int[] nums) { // using prefix and suffix product
 
         int cp = 1;
         int max = Integer.MIN_VALUE;
@@ -1201,7 +1201,7 @@ class questions {
         transpose(matrix);
         reflect(matrix);
     }
-    
+
     public void transpose(int[][] matrix) {
         int n = matrix.length;
         for (int i = 0; i < n; i++) {
@@ -1212,7 +1212,7 @@ class questions {
             }
         }
     }
-    
+
     public void reflect(int[][] matrix) {
         int n = matrix.length;
         for (int i = 0; i < n; i++) {
@@ -1222,6 +1222,91 @@ class questions {
                 matrix[i][n - j - 1] = tmp;
             }
         }
+    }
+
+    // Leetcode 838 Push Dominoes
+
+    public String pushDominoes(String dominoes) {
+
+        char[] arr = new char[dominoes.length() + 2];
+        arr[0] = 'L';
+        arr[arr.length - 1] = 'R';
+        for (int i = 1; i < arr.length - 1; i++) {
+            arr[i] = dominoes.charAt(i - 1);
+        }
+
+        int i = 0;
+        int j = 1;
+
+        while (j != arr.length) {
+
+            while (arr[j] == '.')
+                j++;
+
+            if (arr[i] == arr[j]) {
+                while (i != j) {
+                    arr[i] = arr[j];
+                    i++;
+                }
+                j++;
+            } else if (arr[i] == 'L' && arr[j] == 'R') {
+                i = j;
+                j++;
+            } else if (arr[i] == 'R' && arr[j] == 'L') {
+                int temp1 = i + 1;
+                int temp2 = j - 1;
+                while (temp1 < temp2) {
+                    arr[temp1] = 'R';
+                    arr[temp2] = 'L';
+                    temp1++;
+                    temp2--;
+                }
+                i = j;
+                j++;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder("");
+        for (i = 1; i < arr.length - 1; i++) {
+            sb.append(arr[i]);
+        }
+
+        return sb.toString();
+    }
+
+
+    
+    // Leetcode 680 Valid Palindrome II
+
+    public boolean validPalindrome(String s) {
+        int i=0;
+        int j=s.length()-1;
+        while(i<=j){
+            char ch1=s.charAt(i);
+            char ch2=s.charAt(j);
+            if(ch1!=ch2){
+                if(ispalindrome(s,i+1,j) || ispalindrome(s,i,j-1)){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            i++;
+            j--;
+        }
+        return true;
+    }
+    
+    public boolean ispalindrome(String s,int i,int j){
+     
+        while(i<j){
+         char ch1=s.charAt(i);
+         char ch2=s.charAt(j);
+            if(ch1!=ch2) return false;
+            i++;
+            j--;
+        }
+        return true;
     }
 
 }

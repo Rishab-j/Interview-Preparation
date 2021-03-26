@@ -1309,4 +1309,103 @@ class questions {
         return true;
     }
 
+
+    // Leetcode 891 Sum of Subsequence Widths
+
+    public int sumSubseqWidths(int[] A) {
+        int MOD = 1_000_000_007;
+        int N = A.length;
+        Arrays.sort(A);
+
+        long[] pow2 = new long[N];
+        pow2[0] = 1;
+        for (int i = 1; i < N; ++i)
+            pow2[i] = pow2[i-1] * 2 % MOD;
+
+        long ans = 0;
+        for (int i = 0; i < N; ++i)
+            ans = (ans + (pow2[i] - pow2[N-1-i]) * A[i]) % MOD;
+
+        return (int) ans;
+    }
+
+
+
+    // Leetcode 849 Maximize Distance to Closest Person
+
+    public int maxDistToClosest(int[] seats) {
+        int N = seats.length;
+        int[] left = new int[N], right = new int[N];
+        Arrays.fill(left, N);
+        Arrays.fill(right, N);
+
+        for (int i = 0; i < N; ++i) {
+            if (seats[i] == 1) left[i] = 0;
+            else if (i > 0) left[i] = left[i-1] + 1;
+        }
+
+        for (int i = N-1; i >= 0; --i) {
+            if (seats[i] == 1) right[i] = 0;
+            else if (i < N-1) right[i] = right[i+1] + 1;
+        }
+
+        int ans = 0;
+        for (int i = 0; i < N; ++i)
+            if (seats[i] == 0)
+                ans = Math.max(ans, Math.min(left[i], right[i]));
+        return ans;
+    }
+
+    public int maxDistToClosest_2(int[] seats) {
+        
+        int max = Integer.MIN_VALUE;
+        int n = seats.length;
+        int i = 0;
+        int j = n - 1;
+        
+        while(i < n && seats[i]==0) i++;
+        if(i!=0){
+            max = Math.max(i,max);
+        }
+        
+        while(j >= 0 && seats[j]==0) j--;
+        if(j != n-1) max = Math.max(n - j - 1 ,max);
+        
+        int k = i + 1;
+        while(k<=j){
+            while(seats[k] == 0) k++;
+            int count = (k-i)/2;
+            max = Math.max(count,max);
+            i = k;
+            k++;
+        }
+        
+        return max;
+        
+    }
+
+    // Leetcode 1375 Bulb Switcher III
+
+    public int numTimesAllBlue(int[] light) {
+        
+        int ans = 0;
+        int max = -1;
+ 
+        for(int i = 0; i < light.length; i++){
+            max = Math.max(max,light[i]);
+            if(i + 1 == max) ans++;
+        }
+        
+        return ans;
+    }
+
+    public int numTimesAllBlue_2(int[] arr) {
+        long max = Integer.MIN_VALUE, sum = 0, count=0;
+        for(int i=0;i<arr.length;i++) {
+            sum+=arr[i];
+            max = Math.max(max,arr[i]);
+            if(sum == (max*(max+1))/2) count++;
+        }
+        return (int)count;
+    }
 }

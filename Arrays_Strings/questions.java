@@ -1274,20 +1274,18 @@ class questions {
         return sb.toString();
     }
 
-
-    
     // Leetcode 680 Valid Palindrome II
 
     public boolean validPalindrome(String s) {
-        int i=0;
-        int j=s.length()-1;
-        while(i<=j){
-            char ch1=s.charAt(i);
-            char ch2=s.charAt(j);
-            if(ch1!=ch2){
-                if(ispalindrome(s,i+1,j) || ispalindrome(s,i,j-1)){
+        int i = 0;
+        int j = s.length() - 1;
+        while (i <= j) {
+            char ch1 = s.charAt(i);
+            char ch2 = s.charAt(j);
+            if (ch1 != ch2) {
+                if (ispalindrome(s, i + 1, j) || ispalindrome(s, i, j - 1)) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
@@ -1296,19 +1294,19 @@ class questions {
         }
         return true;
     }
-    
-    public boolean ispalindrome(String s,int i,int j){
-     
-        while(i<j){
-         char ch1=s.charAt(i);
-         char ch2=s.charAt(j);
-            if(ch1!=ch2) return false;
+
+    public boolean ispalindrome(String s, int i, int j) {
+
+        while (i < j) {
+            char ch1 = s.charAt(i);
+            char ch2 = s.charAt(j);
+            if (ch1 != ch2)
+                return false;
             i++;
             j--;
         }
         return true;
     }
-
 
     // Leetcode 891 Sum of Subsequence Widths
 
@@ -1320,16 +1318,14 @@ class questions {
         long[] pow2 = new long[N];
         pow2[0] = 1;
         for (int i = 1; i < N; ++i)
-            pow2[i] = pow2[i-1] * 2 % MOD;
+            pow2[i] = pow2[i - 1] * 2 % MOD;
 
         long ans = 0;
         for (int i = 0; i < N; ++i)
-            ans = (ans + (pow2[i] - pow2[N-1-i]) * A[i]) % MOD;
+            ans = (ans + (pow2[i] - pow2[N - 1 - i]) * A[i]) % MOD;
 
         return (int) ans;
     }
-
-
 
     // Leetcode 849 Maximize Distance to Closest Person
 
@@ -1340,13 +1336,17 @@ class questions {
         Arrays.fill(right, N);
 
         for (int i = 0; i < N; ++i) {
-            if (seats[i] == 1) left[i] = 0;
-            else if (i > 0) left[i] = left[i-1] + 1;
+            if (seats[i] == 1)
+                left[i] = 0;
+            else if (i > 0)
+                left[i] = left[i - 1] + 1;
         }
 
-        for (int i = N-1; i >= 0; --i) {
-            if (seats[i] == 1) right[i] = 0;
-            else if (i < N-1) right[i] = right[i+1] + 1;
+        for (int i = N - 1; i >= 0; --i) {
+            if (seats[i] == 1)
+                right[i] = 0;
+            else if (i < N - 1)
+                right[i] = right[i + 1] + 1;
         }
 
         int ans = 0;
@@ -1357,227 +1357,348 @@ class questions {
     }
 
     public int maxDistToClosest_2(int[] seats) {
-        
+
         int max = Integer.MIN_VALUE;
         int n = seats.length;
         int i = 0;
         int j = n - 1;
-        
-        while(i < n && seats[i]==0) i++;
-        if(i!=0){
-            max = Math.max(i,max);
+
+        while (i < n && seats[i] == 0)
+            i++;
+        if (i != 0) {
+            max = Math.max(i, max);
         }
-        
-        while(j >= 0 && seats[j]==0) j--;
-        if(j != n-1) max = Math.max(n - j - 1 ,max);
-        
+
+        while (j >= 0 && seats[j] == 0)
+            j--;
+        if (j != n - 1)
+            max = Math.max(n - j - 1, max);
+
         int k = i + 1;
-        while(k<=j){
-            while(seats[k] == 0) k++;
-            int count = (k-i)/2;
-            max = Math.max(count,max);
+        while (k <= j) {
+            while (seats[k] == 0)
+                k++;
+            int count = (k - i) / 2;
+            max = Math.max(count, max);
             i = k;
             k++;
         }
-        
+
         return max;
-        
+
     }
 
     // Leetcode 1375 Bulb Switcher III
 
     public int numTimesAllBlue(int[] light) {
-        
+
         int ans = 0;
         int max = -1;
- 
-        for(int i = 0; i < light.length; i++){
-            max = Math.max(max,light[i]);
-            if(i + 1 == max) ans++;
+
+        for (int i = 0; i < light.length; i++) {
+            max = Math.max(max, light[i]);
+            if (i + 1 == max)
+                ans++;
         }
-        
+
         return ans;
     }
 
     public int numTimesAllBlue_2(int[] arr) {
-        long max = Integer.MIN_VALUE, sum = 0, count=0;
-        for(int i=0;i<arr.length;i++) {
-            sum+=arr[i];
-            max = Math.max(max,arr[i]);
-            if(sum == (max*(max+1))/2) count++;
+        long max = Integer.MIN_VALUE, sum = 0, count = 0;
+        for (int i = 0; i < arr.length; i++) {
+            sum += arr[i];
+            max = Math.max(max, arr[i]);
+            if (sum == (max * (max + 1)) / 2)
+                count++;
         }
-        return (int)count;
+        return (int) count;
     }
-
 
     // Leetcode 1031 Maximum Sum of Two Non-Overlapping Subarrays
 
     /** METHOD 1 ------ WRONG */
 
-    public int findM(int[] A, int s, int e, int M){
-        
+    public int findM(int[] A, int s, int e, int M) {
+
         int max = 0;
-        if(s!=0){
-            max = Math.max(max,A[s+M-1] - A[s-1]);
-        }else{
-            max = Math.max(max,A[M-1]);
+        if (s != 0) {
+            max = Math.max(max, A[s + M - 1] - A[s - 1]);
+        } else {
+            max = Math.max(max, A[M - 1]);
         }
-        
+
         int i = s + M;
-        while(i <= e){
-            max = Math.max(max,A[i] - A[i - M]);
+        while (i <= e) {
+            max = Math.max(max, A[i] - A[i - M]);
             i++;
         }
-        
+
         return max;
     }
-    
-    
+
     public int maxSumTwoNoOverlap_(int[] A, int L, int M) {
         int n = A.length;
-        
-        for(int i = 1; i < n; i++){
-            A[i] += A[i-1];
+
+        for (int i = 1; i < n; i++) {
+            A[i] += A[i - 1];
         }
-        
+
         int ans = Integer.MIN_VALUE;
-        
+
         int i = L - 1;
-        while(i + M - 1 < n){
+        while (i + M - 1 < n) {
             int lsum = 0;
             int msum = 0;
-            if(i == L - 1){
+            if (i == L - 1) {
                 lsum = A[i];
-            }else{
+            } else {
                 lsum = A[i] - A[i - L];
             }
-            
-            if(i >= L + M - 1){
-                int left = findM(A,0,i-L,M);
+
+            if (i >= L + M - 1) {
+                int left = findM(A, 0, i - L, M);
                 int right = Integer.MIN_VALUE;
-                if(i < n - M){
-                    right = findM(A,i+1,n-1,M);
+                if (i < n - M) {
+                    right = findM(A, i + 1, n - 1, M);
                 }
-                msum = Math.max(left,right);
-            }else{
-                if(i < n - M){
-                    msum = findM(A,i+1,n-1,M);
-                }     
+                msum = Math.max(left, right);
+            } else {
+                if (i < n - M) {
+                    msum = findM(A, i + 1, n - 1, M);
+                }
             }
-            
-            ans = Math.max(ans,lsum+msum);
+
+            ans = Math.max(ans, lsum + msum);
             i++;
         }
-        
+
         return ans;
     }
 
-
-    /**METHOD 2 - DP */  // in C++ (explanation in Notebook)
+    /** METHOD 2 - DP */ // in C++ (explanation in Notebook)
 
     /**
-     * int maxSumTwoNoOverlap(vector<int>& A, int L, int M) {
-        // DP: let dpl[i] be the maximum sum of length L for the subarray ending at i,
-        // and dpm[i] be the maximum sum of length M for the subarray ending at index i,
-        // dp[i] be the maximum sum of considering both L and M for the subarray ending at i.
-        // We need to calculate dpl and dpm first in order to get dp[i].
-        int size = A.size();
-        vector<int> dpl(size + 1, 0), dpm(size + 1, 0), dp(size + 1, 0);
-        
-        // calculate dpl
-        for (int i = L - 1; i < size; ++i)
-        {
-            int sum = accumulate(A.begin() + i - L + 1, A.begin() + i + 1, 0);
-            dpl[i + 1] = sum > dpl[i] ? sum : dpl[i];
-        }
-        
-        // calculate dpm
-        for (int i = M - 1; i < size; ++i)
-        {
-
-            int sum = accumulate(A.begin() + i - M + 1, A.begin() + i + 1, 0);
-            dpm[i + 1] = sum > dpm[i] ? sum : dpm[i];
-        }
-        
-        // calculate dp
-        for (int i = L + M - 1; i < size; ++i)
-        {
-            int sum1 = accumulate(A.begin() + i - L + 1, A.begin() + i + 1, 0) + dpm[i - L + 1];
-            int sum2 = accumulate(A.begin() + i - M + 1, A.begin() + i + 1, 0) + dpl[i - M + 1];
-            dp[i + 1] = sum1 > sum2 ? sum1 : sum2;
-            dp[i + 1] = dp[i + 1] > dp[i] ? dp[i + 1] : dp[i];
-        }
-        
-        return dp[size];
-    }
+     * int maxSumTwoNoOverlap(vector<int>& A, int L, int M) { // DP: let dpl[i] be
+     * the maximum sum of length L for the subarray ending at i, // and dpm[i] be
+     * the maximum sum of length M for the subarray ending at index i, // dp[i] be
+     * the maximum sum of considering both L and M for the subarray ending at i. //
+     * We need to calculate dpl and dpm first in order to get dp[i]. int size =
+     * A.size(); vector<int> dpl(size + 1, 0), dpm(size + 1, 0), dp(size + 1, 0);
+     * 
+     * // calculate dpl for (int i = L - 1; i < size; ++i) { int sum =
+     * accumulate(A.begin() + i - L + 1, A.begin() + i + 1, 0); dpl[i + 1] = sum >
+     * dpl[i] ? sum : dpl[i]; }
+     * 
+     * // calculate dpm for (int i = M - 1; i < size; ++i) {
+     * 
+     * int sum = accumulate(A.begin() + i - M + 1, A.begin() + i + 1, 0); dpm[i + 1]
+     * = sum > dpm[i] ? sum : dpm[i]; }
+     * 
+     * // calculate dp for (int i = L + M - 1; i < size; ++i) { int sum1 =
+     * accumulate(A.begin() + i - L + 1, A.begin() + i + 1, 0) + dpm[i - L + 1]; int
+     * sum2 = accumulate(A.begin() + i - M + 1, A.begin() + i + 1, 0) + dpl[i - M +
+     * 1]; dp[i + 1] = sum1 > sum2 ? sum1 : sum2; dp[i + 1] = dp[i + 1] > dp[i] ?
+     * dp[i + 1] : dp[i]; }
+     * 
+     * return dp[size]; }
      */
 
+    /** METHOD 3 */
 
-     /** METHOD 3 */
-
-     public int maxSumTwoNoOverlap_3(int[] nums, int L, int M) {
-        // case 1 -> L before M , case 2 -> M before L 
-        // for every 2nd(R) subarray find the subarray to its left with maximum sum( the best candidate )
-        // and the ans is -> for every R subarray with sumR : max(maxTotal , sumR + maxL)
-        return Math.max(helper(nums , L , M), helper(nums , M , L));
+    public int maxSumTwoNoOverlap_3(int[] nums, int L, int M) {
+        // case 1 -> L before M , case 2 -> M before L
+        // for every 2nd(R) subarray find the subarray to its left with maximum sum( the
+        // best candidate )
+        // and the ans is -> for every R subarray with sumR : max(maxTotal , sumR +
+        // maxL)
+        return Math.max(helper(nums, L, M), helper(nums, M, L));
     }
-    private static int helper(int [] nums , int L , int M){
-        
-        int sumR = 0 ,sumL = 0 ;
-        int maxSum = 0 ;
-        int maxL = 0 ;
-        
+
+    private static int helper(int[] nums, int L, int M) {
+
+        int sumR = 0, sumL = 0;
+        int maxSum = 0;
+        int maxL = 0;
+
         // limiters of the initial windows
-        int lStart = 0 ,lEnd = L - 1;
-        int rStart = lEnd + 1 , rEnd = rStart + M - 1;
-        
-        // create the first windows , in a way that they do not overlap [l],[r],[rest of the array]
-        for(int i = 0 ; i <= lEnd ;  i++)
+        int lStart = 0, lEnd = L - 1;
+        int rStart = lEnd + 1, rEnd = rStart + M - 1;
+
+        // create the first windows , in a way that they do not overlap [l],[r],[rest of
+        // the array]
+        for (int i = 0; i <= lEnd; i++)
             sumL += nums[i];
-        for(int i = rStart ; i <= rEnd; i++)
+        for (int i = rStart; i <= rEnd; i++)
             sumR += nums[i];
-        
-        maxL = sumL; // maximum sum of the first left subarray  
-        maxSum = sumL + sumR; // when L + M == nums.length , OR when the sum of 1st windows has the desired ans 
-        
-        // begin sliding both of them , and for every Right subarray get the max sum of the subarray to its left 
-        // ie - the best possible candidate for the right subarray and sum them up and record the global max 
-        // among all such right subarrays 
-        
-        // and since we are using sliding window technique , sliding both by 1 elt at a time we will stop 
-        // when we cannot slide the right window anymore , thus ensuring L and R never overlap 
-        
-        for(int i = rEnd + 1 ; i < nums.length ; i++){
+
+        maxL = sumL; // maximum sum of the first left subarray
+        maxSum = sumL + sumR; // when L + M == nums.length , OR when the sum of 1st windows has the desired
+                              // ans
+
+        // begin sliding both of them , and for every Right subarray get the max sum of
+        // the subarray to its left
+        // ie - the best possible candidate for the right subarray and sum them up and
+        // record the global max
+        // among all such right subarrays
+
+        // and since we are using sliding window technique , sliding both by 1 elt at a
+        // time we will stop
+        // when we cannot slide the right window anymore , thus ensuring L and R never
+        // overlap
+
+        for (int i = rEnd + 1; i < nums.length; i++) {
             sumL = sumL - nums[lStart++] + nums[rStart];
             sumR = sumR - nums[rStart++] + nums[i];
-            maxL = Math.max(maxL , sumL);  // kepp updating the maximum sum of left subarray seen till now 
-            maxSum = Math.max(maxSum , sumR + maxL);
+            maxL = Math.max(maxL, sumL); // kepp updating the maximum sum of left subarray seen till now
+            maxSum = Math.max(maxSum, sumR + maxL);
         }
-        return maxSum ; 
+        return maxSum;
     }
-
 
     /** SIR'S METHOD */
     public int maxSumTwoNoOverlap(int[] A, int L, int M) {
         int n = A.length;
-        
-        for(int i = 1; i < n; i++){
-            A[i] += A[i-1];
+
+        for (int i = 1; i < n; i++) {
+            A[i] += A[i - 1];
         }
-        
+
         int i = L + M;
-        int omax = A[i-1];
-        int lmax = A[i-M-1];
-        int mmax = A[i-L-1];
-        
-        while(i < n){
-            lmax = Math.max(lmax,A[i - M] - A[i - M - L]);
+        int omax = A[i - 1];
+        int lmax = A[i - M - 1];
+        int mmax = A[i - L - 1];
+
+        while (i < n) {
+            lmax = Math.max(lmax, A[i - M] - A[i - M - L]);
             omax = Math.max(omax, lmax + A[i] - A[i - M]);
-            mmax = Math.max(mmax,A[i - L] - A[i - L - M]);
-            omax = Math.max(omax,mmax + A[i] - A[i - L]);
+            mmax = Math.max(mmax, A[i - L] - A[i - L - M]);
+            omax = Math.max(omax, mmax + A[i] - A[i - L]);
             i++;
         }
         return omax;
+    }
+
+    // CodeForces 451 B : Sort Array
+
+    public int sortArray(long[] arr, long[] copy) { // 0 0 3 2 1 4 5 6 7
+        int n = arr.length;
+        int l = 0, r = 0;
+        int seg = 0;
+        int count = 0;
+        Arrays.sort(copy);
+        for (int i = 0; i < n; i++) {
+            if (copy[i] == arr[i])
+                count++;
+        }
+
+        if (count == n) {
+            System.out.println("yes");
+            System.out.print("1 1");
+            return 0;
+        }
+
+        for (int i = 0; i < n - 1; i++) {
+            if (seg < 1) {
+                if (arr[i] < arr[i + 1]) {
+                    i++;
+                }
+
+                else {
+                    l = i;
+                    r = i;
+                    while (i < n - 1 && arr[i] > arr[i + 1]) {
+                        i++;
+                        r++;
+                    }
+
+                    Arrays.sort(arr, l, r + 1);
+                    seg++;
+                }
+            }
+
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (copy[i] != arr[i]) {
+                System.out.println("no");
+                return 0;
+            }
+        }
+
+        System.out.println("yes");
+        System.out.print((l + 1) + " " + (r + 1));
+        return 0;
+    }
+
+    // KMP ALGO : LPS
+
+    public void LPS(String ns) { // KMP is just an extension of LPS
+        int[] lps = new int[ns.length()];
+        int i = 1;
+        int len = 0;
+        while (i < ns.length()) {
+            if (ns.charAt(i) == ns.charAt(len)) {
+                len++;
+                lps[i] = len;
+                i++;
+            } else {
+                if (len > 0) {
+                    len = lps[len - 1];
+                } else {
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+    }
+
+    // Leetcode 214 Shortest Palindrome
+
+    public String shortestPalindrome(String s) { // time -> O(n^2)
+        int n = s.length();
+        StringBuilder sb = new StringBuilder();
+        sb.append(s);
+        String rev = sb.reverse().toString();
+        for (int i = 0; i < n; i++) {
+            if (s.substring(0, n - i).equals(rev.substring(i))) {
+                return rev.substring(0, i) + s;
+            }
+
+        }
+        return "";
+    }
+
+    /** Using KMP */
+    public String shortestPalindrome_KMP(String s) { // time -> O(n)
+
+        if (s.length() == 0)
+            return "";
+
+        int n = s.length();
+        StringBuilder sb = new StringBuilder();
+        sb.append(s);
+        String rev = sb.reverse().toString();
+        String ns = s + "#" + rev;
+        int[] lps = new int[ns.length()];
+        int i = 1;
+        int len = 0;
+        while (i < ns.length()) {
+            if (ns.charAt(i) == ns.charAt(len)) {
+                len++;
+                lps[i] = len;
+                i++;
+            } else {
+                if (len > 0) {
+                    len = lps[len - 1];
+                } else {
+                    lps[i] = 0;
+                    i++;
+                }
+            }
+        }
+
+        return rev.substring(0, n - lps[lps.length - 1]) + s;
     }
 
 }

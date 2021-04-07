@@ -481,4 +481,124 @@ class questions {
 
         return ans.toString();
     }
+
+    // GFG: First negative integer in every window of size k
+
+    public void printFirstNegativeInteger(int arr[], int n, int k) { // O(nk)
+        // flag to check whether window contains
+        // a negative integer or not
+        boolean flag;
+
+        // Loop for each subarray(window) of size k
+        for (int i = 0; i < (n - k + 1); i++) {
+            flag = false;
+
+            // traverse through the current window
+            for (int j = 0; j < k; j++) {
+                // if a negative integer is found, then
+                // it is the first negative integer for
+                // current window. Print it, set the flag
+                // and break
+                if (arr[i + j] < 0) {
+                    System.out.print((arr[i + j]) + " ");
+                    flag = true;
+                    break;
+                }
+            }
+
+            // if the current window does not
+            // contain a negative integer
+            if (!flag)
+                System.out.print("0" + " ");
+        }
+    }
+
+    public void printFirstNegativeInteger_2(int arr[], int n, int k) { // using Queue Time and Space: O(n)
+        // A Double Ended Queue, Di that will
+        // store indexes of useful array elements
+        // for the current window of size k.
+        // The useful elements are all negative integers.
+        LinkedList<Integer> Di = new LinkedList<>();
+
+        // Process first k (or first window)
+        // elements of array
+        int i;
+        for (i = 0; i < k; i++)
+
+            // Add current element at the rear of Di
+            // if it is a negative integer
+            if (arr[i] < 0)
+                Di.add(i);
+
+        // Process rest of the elements,
+        // i.e., from arr[k] to arr[n-1]
+        for (; i < n; i++) {
+            // if Di is not empty then the element
+            // at the front of the queue is the first
+            // negative integer of the previous window
+            if (!Di.isEmpty())
+                System.out.print(arr[Di.peek()] + " ");
+
+            // else the window does not have a
+            // negative integer
+            else
+                System.out.print("0" + " ");
+
+            // Remove the elements which are
+            // out of this window
+            while ((!Di.isEmpty()) && Di.peek() < (i - k + 1))
+                Di.remove(); // Remove from front of queue
+
+            // Add current element at the rear of Di
+            // if it is a negative integer
+            if (arr[i] < 0)
+                Di.add(i);
+        }
+
+        // Print the first negative
+        // integer of last window
+        if (!Di.isEmpty())
+            System.out.print(arr[Di.peek()] + " ");
+        else
+            System.out.print("0" + " ");
+    }
+
+    public void printFirstNegativeInteger_3(int arr[], int k, int n) { // Time : O(n) Space : O(1)
+        int firstNegativeIndex = 0;
+        int firstNegativeElement;
+
+        for (int i = k - 1; i < n; i++) {
+
+            // Skip out of window and positive elements
+            while ((firstNegativeIndex < i) && (firstNegativeIndex <= i - k || arr[firstNegativeIndex] > 0)) {
+                firstNegativeIndex++;
+            }
+
+            // Check if a negative element is
+            // found, otherwise use 0
+            if (arr[firstNegativeIndex] < 0) {
+                firstNegativeElement = arr[firstNegativeIndex];
+            } else {
+                firstNegativeElement = 0;
+            }
+            System.out.print(firstNegativeElement + " ");
+        }
+    }
+
+    // GFG : Maximum sum of smallest and second smallest in an array
+
+    
+    public int pairWithMaxSum(int[] arr, int N) {
+        if (N < 2)
+            return -1;
+
+        // Find two consecutive elements with maximum
+        // sum.
+        int res = arr[0] + arr[1];
+        for (int i = 1; i < N - 1; i++)
+            res = Math.max(res, arr[i] + arr[i + 1]);
+
+        return res;
+    }
+
 }

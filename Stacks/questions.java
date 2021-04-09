@@ -587,7 +587,6 @@ class questions {
 
     // GFG : Maximum sum of smallest and second smallest in an array
 
-    
     public int pairWithMaxSum(int[] arr, int N) {
         if (N < 2)
             return -1;
@@ -601,4 +600,111 @@ class questions {
         return res;
     }
 
+    // GFG : Generate Binary Numbers from 1 to n
+
+    public void generatePrintBinary(int n) {
+        Queue<String> q = new LinkedList<String>();
+        q.add("1");
+        while (n-- > 0) {
+            // print the front of queue
+            String s1 = q.peek();
+            q.remove();
+            System.out.println(s1);
+
+            q.add(s1 + "0");
+            q.add(s1 + "1");
+        }
+    }
+
+    // Leetcode 361: Remove Duplicate Letters ->
+    // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/
+
+
+
+    // Leetcode 844 Backspace String Compare
+
+    public boolean backspaceCompare(String S, String T) {
+        int i = S.length() - 1, j = T.length() - 1;
+        int skipS = 0, skipT = 0;
+
+        while (i >= 0 || j >= 0) {
+            while (i >= 0) { // Find position of next possible char in (S)
+                if (S.charAt(i) == '#') {
+                    skipS++;
+                    i--;
+                } else if (skipS > 0) {
+                    skipS--;
+                    i--;
+                } else
+                    break;
+            }
+            while (j >= 0) { // Find position of next possible char in (T)
+                if (T.charAt(j) == '#') {
+                    skipT++;
+                    j--;
+                } else if (skipT > 0) {
+                    skipT--;
+                    j--;
+                } else
+                    break;
+            }
+            // If two actual characters are different
+            if (i >= 0 && j >= 0 && S.charAt(i) != T.charAt(j))
+                return false;
+            // If expecting to compare char vs nothing
+            if ((i >= 0) != (j >= 0))
+                return false;
+
+            i--;
+            j--;
+        }
+        return true;
+    }
+
+
+    // Leetcode 946 Validate Stack Sequences
+    
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        
+        int i = 0;
+        int j = 0;
+        
+        Stack<Integer> stack = new Stack<>();
+        
+        while(i < pushed.length && j < popped.length){
+            while(stack.size() != 0 && stack.peek() == popped[j]){
+                stack.pop();
+                j++;   
+            }
+            stack.push(pushed[i]);
+            i++;
+        }
+        
+        while(stack.size() != 0 && stack.peek() == popped[j]){
+            stack.pop();
+            j++;
+        }
+        
+        if(stack.size() == 0) return true;
+        return false;
+    }
+
+
+    public boolean validateStackSequences_2(int[] pushed, int[] popped) {
+        int n = pushed.length;
+        int j = 0;
+        
+        Stack<Integer> stack = new Stack<>();
+        
+        for(int ele : pushed){
+            stack.push(ele);
+            while(stack.size() != 0 && j < n && stack.peek() == popped[j]){
+                stack.pop();
+                j++;
+            }
+        }
+        
+        if(stack.size() == 0) return true;
+        return false;
+    }
 }

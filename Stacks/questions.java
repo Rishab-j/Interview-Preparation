@@ -707,4 +707,121 @@ class questions {
         if(stack.size() == 0) return true;
         return false;
     }
+
+
+
+    // Leetcode 895 Maximum Frequency Stack
+
+    class FreqStack {
+        Map<Integer, Integer> freq;
+        Map<Integer, Stack<Integer>> group;
+        int maxfreq;
+    
+        public FreqStack() {
+            freq = new HashMap<>();
+            group = new HashMap<>();
+            maxfreq = 0;
+        }
+    
+        public void push(int x) {
+            int f = freq.getOrDefault(x, 0) + 1;
+            freq.put(x, f);
+            if (f > maxfreq)
+                maxfreq = f;
+    
+            // group.computeIfAbsent(f, z-> new Stack()).push(x);
+            
+            Stack<Integer> newStack = group.getOrDefault(f, new Stack<>());
+            newStack.push(x);
+            group.put(f, newStack);
+        }
+    
+        public int pop() {
+            int x = group.get(maxfreq).pop();
+            freq.put(x, freq.get(x) - 1);
+            if (group.get(maxfreq).size() == 0)
+                maxfreq--;
+            return x;
+        }
+    }
+
+
+    // Leetcode 155 Min Stack
+
+    class MinStack {
+    
+        Stack<Long> stack;
+        long min;
+    
+        /** initialize your data structure here. */
+        public MinStack() {
+            stack = new Stack<>();
+            min = Integer.MAX_VALUE;
+        }
+        
+        public void push(int val) {
+            long vals = (long) val;
+            if(stack.size() == 0){
+                stack.push((long)0);
+                min = vals;
+            }else{
+                stack.push(vals - min);
+                if(vals < min){
+                    min = vals;
+                }
+            }
+        }
+        
+        public void pop() {
+            long temp = stack.pop();
+            if(temp < 0){
+                long val = min;
+                min = val - temp;
+            }
+        }
+        
+        public int top() {
+            long temp = stack.peek();
+            if(temp < 0) return (int)min;
+            else return (int)(temp + min);
+        }
+        
+        public int getMin() {
+            return (int)min;
+        }
+    }
+
+
+    class MinStack2{
+
+        /** initialize your data structure here. */
+        private Stack<Integer> stack;
+        private int min;
+    
+        public MinStack2() {
+            stack = new Stack<>();
+            min = Integer.MAX_VALUE;
+        }
+        
+        public void push(int x) {
+            if(x <= min) {
+                stack.push(min);
+                min = x;
+            }
+            stack.push(x);
+        }
+        
+        public void pop() {
+            if(stack.pop() == min)
+                min = stack.pop();
+        }
+        
+        public int top() {
+            return stack.peek();
+        }
+        
+        public int getMin() {
+            return min;
+        }
+    }
 }

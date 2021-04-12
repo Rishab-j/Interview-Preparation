@@ -619,8 +619,6 @@ class questions {
     // Leetcode 361: Remove Duplicate Letters ->
     // https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/
 
-
-
     // Leetcode 844 Backspace String Compare
 
     public boolean backspaceCompare(String S, String T) {
@@ -661,54 +659,52 @@ class questions {
         return true;
     }
 
-
     // Leetcode 946 Validate Stack Sequences
-    
+
     public boolean validateStackSequences(int[] pushed, int[] popped) {
-        
+
         int i = 0;
         int j = 0;
-        
+
         Stack<Integer> stack = new Stack<>();
-        
-        while(i < pushed.length && j < popped.length){
-            while(stack.size() != 0 && stack.peek() == popped[j]){
+
+        while (i < pushed.length && j < popped.length) {
+            while (stack.size() != 0 && stack.peek() == popped[j]) {
                 stack.pop();
-                j++;   
+                j++;
             }
             stack.push(pushed[i]);
             i++;
         }
-        
-        while(stack.size() != 0 && stack.peek() == popped[j]){
+
+        while (stack.size() != 0 && stack.peek() == popped[j]) {
             stack.pop();
             j++;
         }
-        
-        if(stack.size() == 0) return true;
+
+        if (stack.size() == 0)
+            return true;
         return false;
     }
-
 
     public boolean validateStackSequences_2(int[] pushed, int[] popped) {
         int n = pushed.length;
         int j = 0;
-        
+
         Stack<Integer> stack = new Stack<>();
-        
-        for(int ele : pushed){
+
+        for (int ele : pushed) {
             stack.push(ele);
-            while(stack.size() != 0 && j < n && stack.peek() == popped[j]){
+            while (stack.size() != 0 && j < n && stack.peek() == popped[j]) {
                 stack.pop();
                 j++;
             }
         }
-        
-        if(stack.size() == 0) return true;
+
+        if (stack.size() == 0)
+            return true;
         return false;
     }
-
-
 
     // Leetcode 895 Maximum Frequency Stack
 
@@ -716,26 +712,26 @@ class questions {
         Map<Integer, Integer> freq;
         Map<Integer, Stack<Integer>> group;
         int maxfreq;
-    
+
         public FreqStack() {
             freq = new HashMap<>();
             group = new HashMap<>();
             maxfreq = 0;
         }
-    
+
         public void push(int x) {
             int f = freq.getOrDefault(x, 0) + 1;
             freq.put(x, f);
             if (f > maxfreq)
                 maxfreq = f;
-    
+
             // group.computeIfAbsent(f, z-> new Stack()).push(x);
-            
+
             Stack<Integer> newStack = group.getOrDefault(f, new Stack<>());
             newStack.push(x);
             group.put(f, newStack);
         }
-    
+
         public int pop() {
             int x = group.get(maxfreq).pop();
             freq.put(x, freq.get(x) - 1);
@@ -745,83 +741,115 @@ class questions {
         }
     }
 
-
     // Leetcode 155 Min Stack
 
     class MinStack {
-    
+
         Stack<Long> stack;
         long min;
-    
+
         /** initialize your data structure here. */
         public MinStack() {
             stack = new Stack<>();
             min = Integer.MAX_VALUE;
         }
-        
+
         public void push(int val) {
             long vals = (long) val;
-            if(stack.size() == 0){
-                stack.push((long)0);
+            if (stack.size() == 0) {
+                stack.push((long) 0);
                 min = vals;
-            }else{
+            } else {
                 stack.push(vals - min);
-                if(vals < min){
+                if (vals < min) {
                     min = vals;
                 }
             }
         }
-        
+
         public void pop() {
             long temp = stack.pop();
-            if(temp < 0){
+            if (temp < 0) {
                 long val = min;
                 min = val - temp;
             }
         }
-        
+
         public int top() {
             long temp = stack.peek();
-            if(temp < 0) return (int)min;
-            else return (int)(temp + min);
+            if (temp < 0)
+                return (int) min;
+            else
+                return (int) (temp + min);
         }
-        
+
         public int getMin() {
-            return (int)min;
+            return (int) min;
         }
     }
 
-
-    class MinStack2{
+    class MinStack2 {
 
         /** initialize your data structure here. */
         private Stack<Integer> stack;
         private int min;
-    
+
         public MinStack2() {
             stack = new Stack<>();
             min = Integer.MAX_VALUE;
         }
-        
+
         public void push(int x) {
-            if(x <= min) {
+            if (x <= min) {
                 stack.push(min);
                 min = x;
             }
             stack.push(x);
         }
-        
+
         public void pop() {
-            if(stack.pop() == min)
+            if (stack.pop() == min)
                 min = stack.pop();
         }
-        
+
         public int top() {
             return stack.peek();
         }
-        
+
         public int getMin() {
             return min;
+        }
+    }
+
+    // Reverse First K Elements of a Queue
+
+    
+    public void reverseQueueFirstKElements(Queue<Integer> queue, int k) {
+        if (queue.isEmpty() == true || k > queue.size())
+            return;
+        if (k <= 0)
+            return;
+
+        Stack<Integer> stack = new Stack<Integer>();
+
+        // Push the first K elements into a Stack
+        for (int i = 0; i < k; i++) {
+            stack.push(queue.peek());
+            queue.remove();
+        }
+
+        // Enqueue the contents of stack
+        // at the back of the queue
+        while (!stack.empty()) {
+            queue.add(stack.peek());
+            stack.pop();
+        }
+
+        // Remove the remaining elements and enqueue
+        // them at the end of the Queue
+        for (int i = 0; i < queue.size() - k; i++) {
+            queue.add(queue.peek());
+            queue.remove();
         }
     }
 }

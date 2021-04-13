@@ -823,7 +823,6 @@ class questions {
 
     // Reverse First K Elements of a Queue
 
-    
     public void reverseQueueFirstKElements(Queue<Integer> queue, int k) {
         if (queue.isEmpty() == true || k > queue.size())
             return;
@@ -851,5 +850,88 @@ class questions {
             queue.add(queue.peek());
             queue.remove();
         }
+    }
+
+    // Leetcode 1130 Minimum Cost Tree From Leaf Values
+    public int mctFromLeafValues(int[] arr) {
+        Stack<Integer> st = new Stack<>();
+        st.push(Integer.MAX_VALUE);
+        int ans = 0;
+        for (int i = 0; i < arr.length; i++) {
+            while (st.peek() < arr[i]) {
+                int t = st.peek();
+                st.pop();
+                ans += t * Math.min(st.peek(), arr[i]);
+            }
+            st.push(arr[i]);
+        }
+        while (st.size() > 2) {
+            int t = st.peek();
+            st.pop();
+            ans += t * st.peek();
+        }
+        return ans;
+    }
+
+    // Leetcode 853: Car Fleet 1
+
+    class Car {
+        int position;
+        double time;
+
+        Car(int p, double t) {
+            position = p;
+            time = t;
+        }
+    }
+
+    public int carFleet(int target, int[] position, int[] speed) { // Time: O(nlogn) and Space: O(n)
+
+        int N = position.length;
+        if (N == 0)
+            return 0;
+
+        Car[] cars = new Car[N];
+
+        for (int i = 0; i < N; ++i)
+            cars[i] = new Car(position[i], (double) (target - position[i]) / speed[i]);
+
+        Arrays.sort(cars, (a, b) -> Integer.compare(a.position, b.position));
+
+        Stack<Double> stack = new Stack<>();
+        stack.push(cars[0].time);
+
+        for (int i = 1; i < N; i++) {
+            while (stack.size() != 0 && stack.peek() <= cars[i].time) {
+                stack.pop();
+            }
+            stack.push(cars[i].time);
+        }
+
+        return stack.size();
+    }
+
+    public int carFleet_2(int target, int[] position, int[] speed) { // Time: O(nlogn) and Space: O(1)
+
+        int N = position.length;
+        if (N == 0)
+            return 0;
+
+        Car[] cars = new Car[N];
+
+        for (int i = 0; i < N; ++i)
+            cars[i] = new Car(position[i], (double) (target - position[i]) / speed[i]);
+
+        Arrays.sort(cars, (a, b) -> Integer.compare(a.position, b.position));
+
+        int cnt = 1;
+        for (int i = N - 2; i >= 0; i--) {
+            if (cars[i].time > cars[i + 1].time) {
+                // found a new separated car fleet
+                cnt += 1;
+            } else // merge cars
+                cars[i].time = cars[i + 1].time;
+        }
+        return cnt;
     }
 }

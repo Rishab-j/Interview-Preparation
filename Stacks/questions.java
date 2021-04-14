@@ -934,4 +934,54 @@ class questions {
         }
         return cnt;
     }
+
+    // Leetcode 134. Gas Station
+    public int canCompleteCircuit(int[] gas, int[] cost) {   // Time: O(2N)
+
+        if (gas.length == 0) {
+            return -1;
+        }
+
+        if (gas.length == 1) {
+            return gas[0] - cost[0] < 0 ? -1 : 0;
+        }
+
+        int start = 0;
+        int end = 1;
+
+        int curr = gas[0] - cost[0];
+
+        while (start != end) {
+
+            while (curr < 0 && start != end) {
+                curr = curr - (gas[start] - cost[start]);
+                start = (start + 1) % gas.length;
+                if (start == 0)
+                    return -1;
+            }
+            curr += gas[end] - cost[end];
+
+            end = (end + 1) % gas.length;
+        }
+
+        if (curr < 0)
+            return -1;
+        return start;
+    }
+
+
+    public int canCompleteCircuit_2(int[] gas, int[] cost) {
+        int currentGaining = 0;
+		int totalGaining = 0;
+		int candidate = 0;
+		for (int i = 0; i < gas.length; i++) {
+			currentGaining += gas[i] - cost[i];
+			totalGaining += gas[i] - cost[i];
+			if (currentGaining < 0) {
+				candidate = i + 1;
+				currentGaining = 0;
+			}
+		}
+		return totalGaining >= 0 ? candidate : -1;
+    }
 }

@@ -214,7 +214,7 @@ class questions {
     /** Leetcode 116 Populating Next Right Pointers in Each Node */
 
     class Node { // Node Definition
-        public int val;
+        public int data;
         public Node left;
         public Node right;
         public Node next;
@@ -223,11 +223,11 @@ class questions {
         }
 
         public Node(int _val) {
-            val = _val;
+            data = _val;
         }
 
         public Node(int _val, Node _left, Node _right, Node _next) {
-            val = _val;
+            data = _val;
             left = _left;
             right = _right;
             next = _next;
@@ -511,8 +511,8 @@ class questions {
     /** GFG: Reverse Level Order */
 
     void reverseLevelOrder(Node node) {
-        Stack<Node> S = new Stack();
-        Queue<Node> Q = new LinkedList();
+        Stack<Node> S = new Stack<>();
+        Queue<Node> Q = new LinkedList<>();
         Q.add(node);
 
         while (Q.isEmpty() == false) {
@@ -537,19 +537,19 @@ class questions {
     /** Leetcode 987 : Vertical Order Traversal of a Binary Tree */
 
     int min = 0, max = 0;
-    Map<Integer, List<Integer>> map = new HashMap();
+    Map<Integer, List<Integer>> map = new HashMap<>();
 
     public List<List<Integer>> verticalTraversal(TreeNode root) {
-        List<List<Integer>> res = new ArrayList();
+        List<List<Integer>> res = new ArrayList<>();
         if (root == null)
             return res;
-        Queue<TreeNode> qt = new LinkedList();
-        Queue<Integer> qi = new LinkedList();
+        Queue<TreeNode> qt = new LinkedList<>();
+        Queue<Integer> qi = new LinkedList<>();
         qt.add(root);
         qi.add(0);// not root.val
         while (!qt.isEmpty()) {
             int size = qt.size();
-            Map<Integer, List<Integer>> tmp = new HashMap();
+            Map<Integer, List<Integer>> tmp = new HashMap<>();
             for (int i = 0; i < size; i++) {
                 TreeNode cur = qt.poll();
                 int idx = qi.poll();
@@ -610,14 +610,14 @@ class questions {
         diagonalPrintUtil(root.right, d, diagonalPrint);
     }
 
-    void diagonalPrint(Node root) {
+    // void diagonalPrint(Node root) {
 
-        HashMap<Integer, Vector<Integer>> diagonalPrint = new HashMap<>();
-        diagonalPrintUtil(root, 0, diagonalPrint);
-        for (Entry<Integer, Vector<Integer>> entry : diagonalPrint.entrySet()) {
-            System.out.println(entry.getValue());
-        }
-    }
+    // HashMap<Integer, Vector<Integer>> diagonalPrint = new HashMap<>();
+    // diagonalPrintUtil(root, 0, diagonalPrint);
+    // for (Entry<Integer, Vector<Integer>> entry : diagonalPrint.entrySet()) {
+    // System.out.println(entry.getValue());
+    // }
+    // }
 
     /** GFG: Boundary Traversal */
 
@@ -689,7 +689,7 @@ class questions {
 
         if (root.val == x) {
             if (left > n / 2 || right > n / 2 || (n - left - right - 1) > n / 2)
-                ans = true;
+                win = true;
         }
 
         return left + right + 1;
@@ -700,6 +700,237 @@ class questions {
         return win;
     }
 
+    /** GFG : Image Multiplication */
 
-    
+    long mod = (long) 1e9 + 7;
+    long mul = 0;
+
+    public void multiply(Node l, Node r) {
+
+        if (l == null || r == null)
+            return;
+
+        mul += ((l.data % mod) * (r.data % mod)) % mod;
+
+        multiply(l.left, r.right);
+        multiply(l.right, r.left);
+    }
+
+    public long imgMultiply(Node root) {
+        // code here
+        if (root.left != null && root.right != null) {
+            multiply(root.left, root.right);
+        }
+
+        mul += ((root.data % mod) * (root.data % mod)) % mod;
+
+        return mul % mod;
+
+    }
+
+    /** Leetcode Inorder Succesor */
+
+    public static Node findMinimum(Node root) {
+        while (root.left != null) {
+            root = root.left;
+        }
+
+        return root;
+    }
+
+    // Recursive
+    public static Node findSuccessor(Node root, Node succ, int key) { // Time : O(h)
+        if (root == null) {
+            return null;
+        }
+        if (root.data == key) {
+            if (root.right != null) {
+                return findMinimum(root.right);
+            }
+        } else if (key < root.data) {
+            succ = root;
+            return findSuccessor(root.left, succ, key);
+        } else {
+            return findSuccessor(root.right, succ, key);
+        }
+
+        return succ;
+    }
+
+    // Iterative
+    public static Node findSuccessor(Node root, int key) { // Time : O(h)
+        Node succ = null;
+
+        while (true) {
+            if (key < root.data) {
+                succ = root;
+                root = root.left;
+            } else if (key > root.data) {
+                root = root.right;
+            } else {
+                if (root.right != null) {
+                    succ = findMinimum(root.right);
+                }
+                break;
+            }
+
+            // if the key doesn't exist in the binary tree
+            if (root == null) {
+                return null;
+            }
+        }
+        return succ;
+    }
+
+    /** Leetcode 1339: Maximum Product of Splitted Binary Tree */
+
+    long ans1 = Long.MIN_VALUE;
+    long mod1 = (long) 1e9 + 7;
+
+    public void ansFunc(TreeNode node, HashMap<TreeNode, Long> map, long total) {
+        if (node == null)
+            return;
+
+        if (node.left != null) {
+            ans1 = Math.max(ans1, map.get(node.left) * (total - map.get(node.left)));
+        }
+        if (node.right != null) {
+            ans1 = Math.max(ans1, map.get(node.right) * (total - map.get(node.right)));
+        }
+
+        ansFunc(node.left, map, total);
+        ansFunc(node.right, map, total);
+    }
+
+    public void count(TreeNode node, HashMap<TreeNode, Long> map) {
+        if (node == null)
+            return;
+
+        count(node.left, map);
+        count(node.right, map);
+
+        if (!map.containsKey(node))
+            map.put(node, (long) node.val);
+
+        long left = 0;
+        long right = 0;
+        if (node.left != null)
+            left = map.get(node.left);
+        if (node.right != null)
+            right = map.get(node.right);
+
+        map.put(node, left + right + (long) node.val);
+
+    }
+
+    public int maxProduct(TreeNode root) { // Space : O(N) and Time : O(N)
+
+        HashMap<TreeNode, Long> map = new HashMap<>();
+        count(root, map);
+        // for(TreeNode key: map.keySet()){
+        // System.out.println(key.val + "->" + map.get(key));
+        // }
+        ansFunc(root, map, map.get(root));
+
+        return (int) (ans1 % mod1);
+    }
+
+    // Constant Space
+    long max2 = 0;
+
+    public int maxProduct_2(TreeNode root) { // Space : O(1) and Time : O(N)
+        add(root);
+        compute(root, root.val);
+        return (int) (max % (1e9 + 7));
+    }
+
+    public int add(TreeNode root) {
+        if (root == null)
+            return 0;
+        root.val += add(root.left) + add(root.right);
+        return root.val;
+    }
+
+    public void compute(TreeNode node, long sum) {
+        if (node == null)
+            return;
+        max2 = Math.max(max2, (node.val * (sum - node.val)));
+
+        compute(node.left, sum);
+        compute(node.right, sum);
+
+    }
+
+    /** Leetcode 235 Lowest Common Ancestor of a Binary Search Tree */
+
+    // Recursive
+    public TreeNode lowestCommonAncestorBST_1(TreeNode root, TreeNode p, TreeNode q) {
+
+        int parentVal = root.val;
+
+        int pVal = p.val;
+        int qVal = q.val;
+
+        if (pVal > parentVal && qVal > parentVal) {
+            return lowestCommonAncestor(root.right, p, q);
+        } else if (pVal < parentVal && qVal < parentVal) {
+            return lowestCommonAncestor(root.left, p, q);
+        } else {
+            return root;
+        }
+    }
+
+    // Iterative
+    public TreeNode lowestCommonAncestor_BST2(TreeNode root, TreeNode p, TreeNode q) {
+
+        int pVal = p.val;
+        int qVal = q.val;
+
+        TreeNode node = root;
+
+        while (node != null) {
+
+            int parentVal = node.val;
+
+            if (pVal > parentVal && qVal > parentVal) {
+                node = node.right;
+            } else if (pVal < parentVal && qVal < parentVal) {
+                node = node.left;
+            } else {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    /** Leetcode 236 Lowest Common Ancestor of a Binary Tree */
+
+    private TreeNode LCA;
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) { // Time : O(N) worst case
+
+        // Terminate early if LCA was already found in another branch
+        if (LCA != null)
+            return null;
+
+        if (root == null)
+            return root;
+
+        if (root == p || root == q) {
+            return root;
+        }
+
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        // If both nodes lie in the left or right then their LCA is in the left or right
+        // Otherwise root is their LCA
+        if (left != null && right != null) {
+            LCA = root;
+            return LCA;
+        }
+        ;
+
+        return (left != null) ? left : right;
+    }
 }

@@ -929,8 +929,95 @@ class questions {
             LCA = root;
             return LCA;
         }
-        ;
 
         return (left != null) ? left : right;
+    }
+
+    /** Leetcode 979 Distribute Coins in Binary Tree */
+
+    int steps = 0;
+
+    public int coins(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        int left = coins(root.left);
+        int right = coins(root.right);
+
+        steps = steps + Math.abs(left) + Math.abs(right);
+
+        return left + right + root.val - 1;
+    }
+
+    public int distributeCoins(TreeNode root) {
+        coins(root);
+        return steps;
+    }
+
+    /** Leetcode 99 : Recover BT */
+
+    TreeNode a = null, b = null, prev = null;
+
+    public boolean recoverTree_(TreeNode root) {
+        if (root == null)
+            return false;
+
+        if (recoverTree_(root.left))
+            return true;
+
+        if (prev != null && prev.val > root.val) {
+            b = root;
+            if (a == null)
+                a = prev;
+            else
+                return true;
+        }
+
+        prev = root;
+
+        if (recoverTree_(root.right))
+            return true;
+
+        return false;
+    }
+
+    public void recoverTree(TreeNode root) {
+        recoverTree_(root);
+        if (a != null) {
+            int temp = a.val;
+            a.val = b.val;
+            b.val = temp;
+        }
+    }
+
+    /** Leetcode 124: Binary Tree Maximum Path Sum */
+
+    int path = -(int) 1e8;
+
+    public int maxSum(TreeNode node) {
+
+        if (node == null)
+            return -(int) 1e8;
+        if (node.data > path)
+            path = node.val;
+        if (node.left == null && node.right == null)
+            return node.val;
+
+        int nodeLeft = maxSum(node.left);
+        int nodeRight = maxSum(node.right);
+
+        if (nodeLeft + node.data > path)
+            path = nodeLeft + node.val;
+        if (nodeRight + node.data > path)
+            path = nodeRight + node.val;
+        if (nodeLeft + nodeRight + node.data > path)
+            path = nodeLeft + nodeRight + node.val;
+
+        return Math.max(node.val, (Math.max(nodeLeft, nodeRight) + node.val));
+    }
+
+    public int maxPathSum(TreeNode root) {
+        maxSum(root);
+        return path;
     }
 }

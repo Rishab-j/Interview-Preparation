@@ -998,7 +998,7 @@ class questions {
 
         if (node == null)
             return -(int) 1e8;
-        if (node.data > path)
+        if (node.val > path)
             path = node.val;
         if (node.left == null && node.right == null)
             return node.val;
@@ -1006,11 +1006,11 @@ class questions {
         int nodeLeft = maxSum(node.left);
         int nodeRight = maxSum(node.right);
 
-        if (nodeLeft + node.data > path)
+        if (nodeLeft + node.val > path)
             path = nodeLeft + node.val;
-        if (nodeRight + node.data > path)
+        if (nodeRight + node.val > path)
             path = nodeRight + node.val;
-        if (nodeLeft + nodeRight + node.data > path)
+        if (nodeLeft + nodeRight + node.val > path)
             path = nodeLeft + nodeRight + node.val;
 
         return Math.max(node.val, (Math.max(nodeLeft, nodeRight) + node.val));
@@ -1019,5 +1019,267 @@ class questions {
     public int maxPathSum(TreeNode root) {
         maxSum(root);
         return path;
+    }
+
+    /** Leetcode 114: Flatten Binary Tree to Linked List */
+
+    // Recursive
+    private TreeNode flat(TreeNode root) { // O(N)
+        if (root == null)
+            return null;
+
+        if (root.left == null && root.right == null)
+            return root;
+
+        TreeNode left = flat(root.left);
+        TreeNode right = flat(root.right);
+
+        if (left != null) {
+            left.right = root.right;
+            root.right = root.left;
+            root.left = null;
+        }
+        return right != null ? right : left;
+    }
+
+    public void flatten(TreeNode root) {
+        flat(root);
+    }
+
+    // Iterative
+    public void flatten2(TreeNode root) {
+        if (root == null)
+            return;
+        Stack<TreeNode> stk = new Stack<TreeNode>();
+        stk.push(root);
+        while (!stk.isEmpty()) {
+            TreeNode curr = stk.pop();
+            if (curr.right != null)
+                stk.push(curr.right);
+            if (curr.left != null)
+                stk.push(curr.left);
+            if (!stk.isEmpty())
+                curr.right = stk.peek();
+            curr.left = null;
+        }
+    }
+
+    /**
+     * Binary Tree to CDLL:
+     * https://www.geeksforgeeks.org/convert-a-binary-tree-to-a-circular-doubly-link-list/
+     */
+
+    /**
+     * GFG : DLL to Tree
+     * https://www.geeksforgeeks.org/in-place-conversion-of-sorted-dll-to-balanced-bst/
+     */
+
+    /**
+     * GFG : Merge Two BT
+     * https://www.geeksforgeeks.org/merge-two-balanced-binary-search-trees/
+     */
+
+    ////////////////////////////////////////////////
+
+    /** GFG : Clone A Binary Tree */
+
+    class Tree {
+        int data;
+        Tree left, right, random;
+
+        Tree(int d) {
+            data = d;
+            left = null;
+            right = null;
+            random = null;
+        }
+    }
+
+    public void mapping(Tree node) {
+        if (node == null)
+            return;
+
+        Tree clone = new Tree(node.data);
+
+        Tree temp = node.left;
+        clone.left = temp;
+        node.left = clone;
+
+        mapping(node.left.left);
+        mapping(node.right);
+    }
+
+    public void randomP(Tree node) {
+        if (node == null)
+            return;
+
+        if (node.random != null) {
+            node.left.random = node.random.left;
+        }
+
+        randomP(node.left.left);
+        randomP(node.right);
+    }
+
+    public Tree extract(Tree node) {
+
+        if (node == null)
+            return null;
+
+        Tree cloneLeft = extract(node.left.left);
+        Tree cloneRight = extract(node.right);
+
+        Tree clone = node.left;
+        node.left = node.left.left;
+
+        clone.left = cloneLeft;
+        clone.right = cloneRight;
+
+        return clone;
+    }
+
+    public Tree cloneTree(Tree tree) {
+        // add code here.
+
+        if (tree == null)
+            return null;
+
+        mapping(tree);
+        randomP(tree);
+        return extract(tree);
+
+    }
+
+    /** Leetcode 297 : Serialize and Deserialize Binary Tree */
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        buildString(root, sb);
+        return sb.toString();
+    }
+
+    private void buildString(TreeNode node, StringBuilder sb) {
+        if (node == null) {
+            sb.append("X").append(",");
+        } else {
+            sb.append(node.val).append(",");
+            buildString(node.left, sb);
+            buildString(node.right, sb);
+        }
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        Queue<String> nodes = new LinkedList<>();
+        String[] values = data.split(",");
+        for (String s : values) {
+            nodes.add(s);
+        }
+        return buildTree(nodes);
+    }
+
+    private TreeNode buildTree(Queue<String> nodes) {
+        String val = nodes.remove();
+        if (val.equals("X"))
+            return null;
+        else {
+            TreeNode node = new TreeNode(Integer.valueOf(val));
+            node.left = buildTree(nodes);
+            node.right = buildTree(nodes);
+            return node;
+        }
+    }
+
+    /** Leetcode 1372 : Longest ZigZag Path in a Binary Tree */
+
+    int maxSteps = 0;
+
+    public void path(TreeNode root, boolean isRight, int steps) {
+
+        if (root == null)
+            return;
+
+        maxSteps = Math.max(maxSteps, steps);
+
+        if (isRight) {
+            path(root.left, false, steps + 1);
+            path(root.right, true, 1);
+        } else {
+            path(root.left, false, 1);
+            path(root.right, true, steps + 1);
+        }
+
+    }
+
+    public int longestZigZag(TreeNode root) {
+
+        if (root == null)
+            return 0;
+
+        path(root.left, false, 1);
+        path(root.right, true, 1);
+
+        return maxSteps;
+    }
+
+    /** Construct Tree using Level Order and In Order */
+    
+    HashMap<Integer, Integer> nodeMap = new HashMap<>();
+
+    Node construct(int[] in, int[] level, int isi, int iei) {
+        if (isi > iei || level.length == 0)
+            return null;
+
+        Node node = new Node(level[0]);
+        int idx = nodeMap.get(level[0]);
+
+        int lenLeft = idx - isi;
+        if (lenLeft > 0) {
+            int j = 0;
+            int[] levelLeft = new int[lenLeft];
+            for (int l : level) {
+                int index = nodeMap.get(l);
+                if (index >= isi && index < idx) {
+                    levelLeft[j] = l;
+                    j++;
+                }
+            }
+            node.left = construct(in, levelLeft, isi, idx - 1);
+        }
+
+        int lenRight = iei - idx;
+        if (lenRight > 0) {
+            int k = 0;
+            int[] levelRight = new int[lenRight];
+            for (int l : level) {
+                int index = nodeMap.get(l);
+                if (index >= idx + 1 && index <= iei) {
+                    levelRight[k] = l;
+                    k++;
+                }
+            }
+
+            node.right = construct(in, levelRight, idx + 1, iei);
+        }
+
+        return node;
+
+    }
+
+    Node buildTree(int inord[], int level[]) {
+        // your code here
+
+        int i = inord.length;
+        int l = level.length;
+
+        if (i != l)
+            return null;
+
+        for (int j = 0; j < i; j++) {
+            nodeMap.put(inord[j], j);
+        }
+
+        return construct(inord, level, 0, i - 1);
     }
 }

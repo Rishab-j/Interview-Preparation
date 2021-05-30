@@ -1282,4 +1282,91 @@ class questions {
 
         return construct(inord, level, 0, i - 1);
     }
+
+    /** Leetcode 98. Validate Binary Search Tree */
+
+    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, null, null);
+    }
+    
+    public boolean isValidBST(TreeNode root, TreeNode left, TreeNode right) {
+        if(root == null) {
+            return true;
+        }
+        
+        if(left != null && root.val <= left.val) {
+            return false;
+        }
+        
+        if(right != null && root.val >= right.val) {
+            return false;
+        }
+        
+        return isValidBST(root.left, left, root) && isValidBST(root.right, root, right);
+    }
+
+    /** BST From Preorder -> GFG */
+    /** BST From Postorder -> GFG */
+    /** Construct from pre and post-> GFG */
+
+
+    /** Leetcode 222. Count Complete Tree Nodes */
+
+    public int countNodes(TreeNode root) {
+        if(root == null) return 0;
+        
+        int left = getHeightLeft(root);
+        int right = getHeightRight(root);
+        
+        if(left == right) return ((2<<(left)) -1);
+            
+        else return countNodes(root.left)+ countNodes(root.right)+1;
+    }
+    
+    
+    public int getHeightLeft(TreeNode root){
+        int count=0;
+        while(root.left!=null){
+            count++;
+            root = root.left;
+        }
+        return count;
+    }
+    
+    
+    public int getHeightRight(TreeNode root){
+        int count=0;
+        while(root.right!=null){
+            count++;
+            root = root.right;
+        }
+        return count;
+    }
+
+
+    /** Leetcode 129. Sum Root to Leaf Numbers */
+
+    int r = 0;
+    
+    public void sum(TreeNode root, int s){
+        
+        if(root.left == null && root.right == null){
+            r += s;
+        }
+        
+        if(root.left != null){
+            sum(root.left,s*10+root.left.val);
+        }
+        
+        if(root.right != null){
+            sum(root.right,s*10+root.right.val);
+        }
+        
+    }
+    
+    public int sumNumbers(TreeNode root) {
+        if(root == null) return 0;
+        sum(root,root.val);
+        return r;
+    }
 }

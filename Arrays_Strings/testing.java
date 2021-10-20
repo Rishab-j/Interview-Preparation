@@ -57,16 +57,18 @@ public class testing {
 
         Scanner scn = new Scanner(System.in);
         int n = scn.nextInt();
-        long[] arr = new long[n];
-        long[] copy = new long[n];
+        int k = scn.nextInt();
+        
+        int count = 0;
+
         for (int i = 0; i < n; i++) {
-            arr[i] = scn.nextLong();
-            copy[i] = arr[i];
+            int a = scn.nextInt();
+            if(a >= k) count++;
         }
-        // solution(new long[]{2,1,3,4},new long[]{2,1,3,4});
-        solution(arr, copy);
 
         scn.close();
+
+        System.out.println(count);
 
     }
 }
